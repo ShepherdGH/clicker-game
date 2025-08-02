@@ -9,6 +9,10 @@ if(process.env.PORT){
     PORT = process.env.PORT;
 }
 
+// Defining Upgrade Cost Variables 
+const clickUpgradeCost = 10;
+const autoClickerUpgradeCost = 50;
+
 // Data Storage
 const gameData = {};
 
@@ -47,7 +51,7 @@ app.post('/api/game/:userId/upgrade', (req, res) => {
   
   // Simple upgrade logic
   if (upgradeType === 'clickPower') {
-    const cost = gameData[userId].clickPower * 10;
+    const cost = gameData[userId].clickPower * clickUpgradeCost;
     if (gameData[userId].clicks >= cost) {
       gameData[userId].clicks -= cost;
       gameData[userId].clickPower += 1;
@@ -55,7 +59,7 @@ app.post('/api/game/:userId/upgrade', (req, res) => {
       return res.status(400).json({ error: 'Not enough clicks' });
     }
   } else if (upgradeType === 'autoClicker') {
-    const cost = (gameData[userId].autoClickers + 1) * 50;
+    const cost = (gameData[userId].autoClickers + 1) * autoClickerUpgradeCost;
     if (gameData[userId].clicks >= cost) {
       gameData[userId].clicks -= cost;
       gameData[userId].autoClickers += 1;
@@ -66,4 +70,17 @@ app.post('/api/game/:userId/upgrade', (req, res) => {
   
   gameData[userId].lastSaved = new Date();
   res.json(gameData[userId]);
+});
+
+// Auto Clicker Logic 
+setInterval(() => {
+  Object.keys(gameData).forEach(userId => {
+    if (gameData[userId].autoClickers > 0) {
+      gameData[userId].clicks += gameData[userId].autoClickers;
+    }
+  });
+}, 1000);
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
