@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import api from './services/api';
+import api from './services/api.js';
 import './App.css';
 
 function App() {
@@ -48,7 +48,7 @@ function App() {
       const data = await api.buyUpgrade(upgradeType);
       setGameState(data);
     } catch (error) {
-      alert('Not enough clicks!');
+      console.error('Error upgrading:', error);
     }
   };
 

@@ -13,12 +13,15 @@ if(process.env.PORT){
 const clickUpgradeCost = 10;
 const autoClickerUpgradeCost = 50;
 
+app.use(cors());
+app.use(express.json());
+
 // Data Storage
 const gameData = {};
 
 // Routes
 app.get('/api/game/:userId', (req, res) => {
-    const { userId } = req.params.userId;
+    const { userId } = req.params;
     if (!gameData[userId]) {
         gameData[userId] = {
             clicks: 0,
@@ -31,9 +34,9 @@ app.get('/api/game/:userId', (req, res) => {
 })
 
 app.post('/api/game/:userId/click', (req, res) => {
-  const { userId } = req.params.userId;
+  const { userId } = req.params;
   if (!gameData[userId]) {
-    return res.status(404).json({ error: 'User not found' });
+    return res.status(404).json({ error: `User not found with userId: ${userId}` });
   }
   
   gameData[userId].clicks += gameData[userId].clickPower;
@@ -51,7 +54,7 @@ app.post('/api/game/:userId/upgrade', (req, res) => {
   
   // Simple upgrade logic
   if (upgradeType === 'clickPower') {
-    const cost = gameData[userId].clickPower * clickUpgradeCost;
+    const cost = gameData[userId].clickPower * 10;
     if (gameData[userId].clicks >= cost) {
       gameData[userId].clicks -= cost;
       gameData[userId].clickPower += 1;
@@ -59,7 +62,7 @@ app.post('/api/game/:userId/upgrade', (req, res) => {
       return res.status(400).json({ error: 'Not enough clicks' });
     }
   } else if (upgradeType === 'autoClicker') {
-    const cost = (gameData[userId].autoClickers + 1) * autoClickerUpgradeCost;
+    const cost = (gameData[userId].autoClickers + 1) * 50;
     if (gameData[userId].clicks >= cost) {
       gameData[userId].clicks -= cost;
       gameData[userId].autoClickers += 1;
