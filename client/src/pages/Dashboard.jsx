@@ -14,7 +14,7 @@ const Dashboard = () => {
     money,
     experience,
     clickPower,
-    autoMoney,
+    autoClickers,
     autoExperience,
   } = gameState;
 
@@ -34,8 +34,8 @@ const Dashboard = () => {
           <p>{clickPower}</p>
         </div>
         <div className="upgrade-card">
-          <h4>Auto Money</h4>
-          <p>{autoMoney}</p>
+          <h4>Auto Clicker</h4>
+          <p>{autoClickers}</p>
         </div>
         <div className="upgrade-card">
           <h4>Auto Experience</h4>
@@ -55,7 +55,7 @@ const Dashboard = () => {
         </div>
 
         <div className="upgrade-card">
-          <h4>Upgrade Auto Money</h4>
+          <h4>Upgrade Auto Clickers</h4>
           <p>Cost: {getUpgradeCost('autoClicker')}</p>
           <button onClick={() => buyUpgrade('autoClicker')}>Upgrade</button>
         </div>

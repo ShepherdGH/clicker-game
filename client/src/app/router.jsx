@@ -8,12 +8,12 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <MainLayout />,
-    errorElement: <div>❌ Router error</div>,
+    errorElement: <div> Router error</div>,
     children: [
       { path: '', element: <Dashboard /> },
       { path: 'dashboard', element: <Dashboard /> },
       { path: 'skills', element: <Skills /> },
-      { path: 'profile', element: <Blank /> }, // 可以先用 Blank 占位
+      { path: 'profile', element: <Blank /> }, 
     ],
   },
 ]);

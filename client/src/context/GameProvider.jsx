@@ -15,14 +15,15 @@ const GameProvider = ({ children }) => {
     autoClickers: 0,
     autoExperience: 0,
   });
-
+  //per sec update
   useEffect(() => {
     const interval = setInterval(() => {
       loadGameData();
     }, 1000);
     return () => clearInterval(interval);
   }, []);
-
+  //get game data from server by api
+  //set gameState by data
   const loadGameData = async () => {
     try {
       const data = await api.getGameData();
@@ -34,7 +35,7 @@ const GameProvider = ({ children }) => {
     }
   };
 
-  //点击逻辑
+  //get click method from server
   const handleClick = async () => {
     try {
       const data = await api.click();
@@ -43,20 +44,20 @@ const GameProvider = ({ children }) => {
       console.error('Error clicking:', error);
     }
   };
-
+  //calculate upgrade cost
   const getUpgradeCost = (type) => {
     switch (type) {
       case 'clickPower':
         return gameState.clickPower * 10;
-      case 'autoMoney':
-        return (gameState.autoMoney + 1) * 50;
+      case 'autoClicker':
+        return (gameState.autoClickers + 1) * 50;
       case 'autoExperience':
         return (gameState.autoExperience + 1) * 75;
       default:
         return 0;
     }
   };
-
+  
   const handleUpgrade = async (upgradeType) => {
     try {
       const data = await api.buyUpgrade(upgradeType);
