@@ -24,11 +24,13 @@ app.get('/api/game/:userId', (req, res) => {
     const { userId } = req.params;
     if (!gameData[userId]) {
         gameData[userId] = {
-            clicks: 0,
-            clickPower: 1,
-            autoClickers: 0,
-            lastSaved: new Date()
-        };
+          money: 0,
+          experience: 0,
+          level: 1,
+          clickPower: 1,
+          autoMoney: 0,
+          autoExperience: 0,
+        }
     }
     res.json(gameData[userId]);
 })
