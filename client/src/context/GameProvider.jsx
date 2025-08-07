@@ -1,5 +1,6 @@
 // src/context/GameProvider.jsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import api from './services/api';
 
 const GameContext = createContext();
 
@@ -11,29 +12,38 @@ const GameProvider = ({ children }) => {
     experience: 0,
     level: 1,
     clickPower: 1,
-    autoMoney: 0,
+    autoClickers: 0,
     autoExperience: 0,
   });
-  //自动增长
+
   useEffect(() => {
     const interval = setInterval(() => {
-      setGameState(prev => ({
-        ...prev,
-        money: prev.money + prev.autoMoney,
-        experience: prev.experience + prev.autoExperience,
-      }));
+      loadGameData();
     }, 1000);
-
     return () => clearInterval(interval);
   }, []);
-  //点击逻辑
-  const handleClick = () => {
-    setGameState(prev => ({
-      ...prev,
-      money: prev.money + prev.clickPower,
-      experience: prev.experience + prev.clickPower * 0.5,
-    }));
+
+  const loadGameData = async () => {
+    try {
+      const data = await api.getGameData();
+      setGameState(data);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error loading game data:', error);
+      setLoading(false);
+    }
   };
+
+  //点击逻辑
+  const handleClick = async () => {
+    try {
+      const data = await api.click();
+      setGameState(data);
+    } catch (error) {
+      console.error('Error clicking:', error);
+    }
+  };
+
   const getUpgradeCost = (type) => {
     switch (type) {
       case 'clickPower':
@@ -46,36 +56,18 @@ const GameProvider = ({ children }) => {
         return 0;
     }
   };
+
+  const handleUpgrade = async (upgradeType) => {
+    try {
+      const data = await api.buyUpgrade(upgradeType);
+      setGameState(data);
+    } catch (error) {
+      alert('Not enough clicks!');
+    }
+  };
+
   const buyUpgrade = (type) => {
-    const cost = getUpgradeCost(type);
-    if (gameState.money < cost) return false;
-
-    setGameState(prev => {
-      switch (type) {
-        case 'clickPower':
-          return {
-            ...prev,
-            money: prev.money - cost,
-            clickPower: prev.clickPower + 1,
-          };
-        case 'autoMoney':
-          return {
-            ...prev,
-            money: prev.money - cost,
-            autoMoney: prev.autoMoney + 1,
-          };
-        case 'autoExperience':
-          return {
-            ...prev,
-            money: prev.money - cost,
-            autoExperience: prev.autoExperience + 1,
-          };
-        default:
-          return prev;
-      }
-    });
-
-    return true;
+    handleUpgrade(type);
   };
 
   return (

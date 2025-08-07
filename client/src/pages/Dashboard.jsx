@@ -56,14 +56,14 @@ const Dashboard = () => {
 
         <div className="upgrade-card">
           <h4>Upgrade Auto Money</h4>
-          <p>Cost: {getUpgradeCost('autoMoney')}</p>
-          <button onClick={() => buyUpgrade('autoMoney')}>Upgrade</button>
+          <p>Cost: {getUpgradeCost('autoClicker')}</p>
+          <button onClick={() => buyUpgrade('autoClicker')}>Upgrade</button>
         </div>
 
         <div className="upgrade-card">
           <h4>Upgrade Auto Experience</h4>
-          <p>Cost: {getUpgradeCost('autoExperience')}</p>
-          <button onClick={() => buyUpgrade('autoExperience')}>Upgrade</button>
+          <p>Cost: {getUpgradeCost('autoClicker')}</p>
+          <button onClick={() => buyUpgrade('autoClicker')}>Upgrade</button>
         </div>
 
 

@@ -28,7 +28,7 @@ app.get('/api/game/:userId', (req, res) => {
           experience: 0,
           level: 1,
           clickPower: 1,
-          autoMoney: 0,
+          autoClickers: 0,
           autoExperience: 0,
         }
     }
@@ -41,7 +41,7 @@ app.post('/api/game/:userId/click', (req, res) => {
     return res.status(404).json({ error: `User not found with userId: ${userId}` });
   }
   
-  gameData[userId].clicks += gameData[userId].clickPower;
+  gameData[userId].money += gameData[userId].clickPower;
   gameData[userId].lastSaved = new Date();
   res.json(gameData[userId]);
 });
@@ -57,19 +57,19 @@ app.post('/api/game/:userId/upgrade', (req, res) => {
   // Simple upgrade logic
   if (upgradeType === 'clickPower') {
     const cost = gameData[userId].clickPower * 10;
-    if (gameData[userId].clicks >= cost) {
-      gameData[userId].clicks -= cost;
+    if (gameData[userId].money >= cost) {
+      gameData[userId].money -= cost;
       gameData[userId].clickPower += 1;
     } else {
-      return res.status(400).json({ error: 'Not enough clicks' });
+      return res.status(400).json({ error: 'Not enough money' });
     }
   } else if (upgradeType === 'autoClicker') {
     const cost = (gameData[userId].autoClickers + 1) * 50;
-    if (gameData[userId].clicks >= cost) {
-      gameData[userId].clicks -= cost;
+    if (gameData[userId].money >= cost) {
+      gameData[userId].money -= cost;
       gameData[userId].autoClickers += 1;
     } else {
-      return res.status(400).json({ error: 'Not enough clicks' });
+      return res.status(400).json({ error: 'Not enough money' });
     }
   }
   
@@ -81,7 +81,7 @@ app.post('/api/game/:userId/upgrade', (req, res) => {
 setInterval(() => {
   Object.keys(gameData).forEach(userId => {
     if (gameData[userId].autoClickers > 0) {
-      gameData[userId].clicks += gameData[userId].autoClickers;
+      gameData[userId].money += gameData[userId].autoClickers;
     }
   });
 }, 1000);
