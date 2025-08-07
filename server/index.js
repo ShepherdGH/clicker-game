@@ -10,8 +10,8 @@ if(process.env.PORT){
 }
 
 // Defining Upgrade Cost Variables 
-const clickUpgradeCost = 10;
-const autoClickerUpgradeCost = 50;
+const CLICK_UPGRADE_COST = 10;
+const AUTOCLICKER_UPGRADE_COST = 50;
 
 app.use(cors());
 app.use(express.json());
@@ -54,7 +54,7 @@ app.post('/api/game/:userId/upgrade', (req, res) => {
   
   // Simple upgrade logic
   if (upgradeType === 'clickPower') {
-    const cost = gameData[userId].clickPower * 10;
+    const cost = gameData[userId].clickPower * CLICK_UPGRADE_COST;
     if (gameData[userId].clicks >= cost) {
       gameData[userId].clicks -= cost;
       gameData[userId].clickPower += 1;
@@ -62,7 +62,7 @@ app.post('/api/game/:userId/upgrade', (req, res) => {
       return res.status(400).json({ error: 'Not enough clicks' });
     }
   } else if (upgradeType === 'autoClicker') {
-    const cost = (gameData[userId].autoClickers + 1) * 50;
+    const cost = (gameData[userId].autoClickers + 1) * AUTOCLICKER_UPGRADE_COST;
     if (gameData[userId].clicks >= cost) {
       gameData[userId].clicks -= cost;
       gameData[userId].autoClickers += 1;
