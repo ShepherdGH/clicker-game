@@ -70,6 +70,16 @@ const GameProvider = ({ children }) => {
   const buyUpgrade = (toolType, upgradeType) => {
     handleUpgrade(toolType, upgradeType);
   };
+  //sell
+  const handleSell = async (resourceType, quantity) => {
+    try {
+      const data = await api.sell(resourceType, quantity);
+      setGameState(data);
+    } catch (error) {
+      console.error('Error selling resource:', error);
+    }
+  };
+
 
 
   return (
@@ -78,6 +88,7 @@ const GameProvider = ({ children }) => {
       handleClick,
       buyUpgrade,
       getUpgradeCost,
+      handleSell
     }}>
       {children}
     </GameContext.Provider>

@@ -65,18 +65,18 @@ function initializeUserData(userId) {
             active: true,
             min_tool_level: 1,
             dropRates: {
-              stone: 0.7,
-              iron: 0.2,
-              gold: 0.1,
+              stone: 1,
+              iron: 0,
+              gold: 0,
             },
           },
           deepMine: {
             active: false,
             min_tool_level: 3,
             dropRates: {
-              stone: 0.4,
-              iron: 0.3,
-              gold: 0.3,
+              stone: 0.9,
+              iron: 0.1,
+              gold: 0,
             },
           },
         },
@@ -147,14 +147,9 @@ app.post('/api/game/:userId/click', (req, res) => {
 
 
   // return info 
-  return res.json({
-    message: "Resource collected",
-    area: activeAreaKey,
-    drops,
-    inventory: gameData[userId].inventory
-  });
+  return res.json(gameData[userId]);
 });
-
+// upgrade logic
 app.post('/api/game/:userId/upgrade', (req, res) => {
   const { userId } = req.params;
   const { toolType, upgradeType } = req.body;
@@ -196,22 +191,83 @@ app.post('/api/game/:userId/upgrade', (req, res) => {
 
   gameData[userId].lastSaved = new Date();
 
-  res.json({
-    message: `${toolType} ${upgradeType} upgraded to level ${newLevel}`,
-    tool,
-    inventory: gameData[userId].inventory
-  });
+  return res.json(gameData[userId]);
+});
+
+
+// 静态价格表（以后可替换为数据库动态价格）
+const RESOURCE_PRICES = {
+  wood: 2,
+  stone: 3,
+  iron: 5,
+  gold: 10
+};
+//sell logic
+app.post('/api/game/:userId/sell', (req, res) => {
+  const { userId } = req.params;
+  const { resourceType, quantity } = req.body;
+
+  // basic check
+  if (!gameData[userId]) {
+    return res.status(404).json({ error: 'User not found' });
+  }
+  if (!resourceType || !(resourceType in RESOURCE_PRICES)) {
+    return res.status(400).json({ error: 'Invalid resource type' });
+  }
+  if (!quantity || quantity <= 0) {
+    return res.status(400).json({ error: 'Invalid quantity' });
+  }
+  //get inventory
+  const userInv = gameData[userId].inventory;
+  if ((userInv[resourceType] || 0) < quantity) {
+    return res.status(400).json({ error: 'Not enough resources' });
+  }
+
+  // sell and gain
+  userInv[resourceType] -= quantity;
+
+  const coinsEarned = quantity * RESOURCE_PRICES[resourceType];
+  userInv.coins = (userInv.coins || 0) + coinsEarned;
+
+  gameData[userId].lastSaved = new Date();
+
+  return res.json(gameData[userId]);
 });
 
 
 // Auto Clicker Logic 
 setInterval(() => {
   Object.keys(gameData).forEach(userId => {
-    if (gameData[userId].autoClickers > 0) {
-      gameData[userId].money += gameData[userId].autoClickers;
-    }
+    const user = gameData[userId];
+    if (!user) return;
+
+    // 遍历所有资源类型的区域
+    Object.keys(user.area).forEach(resourceType => {
+      const areaData = user.area[resourceType];
+      const toolType = areaData.toolType;
+      const tool = user.tools[toolType];
+
+      if (!tool || tool.collector_level <= 0) return;
+
+      // 找到当前激活的区域
+      const activeAreaKey = Object.keys(areaData).find(areaName =>
+        areaName !== "toolType" && areaData[areaName].active
+      );
+      if (!activeAreaKey) return;
+
+      const activeArea = areaData[activeAreaKey];
+      if (tool.click_level < activeArea.min_tool_level) return; // 工具等级不足
+
+      // 模拟掉落（按 collector_level 采集）
+      Object.entries(activeArea.dropRates).forEach(([item, rate]) => {
+        if (Math.random() < rate) {
+          user.inventory[item] = (user.inventory[item] || 0) + tool.collector_level;
+        }
+      });
+    });
   });
 }, 1000);
+
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

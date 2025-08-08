@@ -31,6 +31,14 @@ const api = {
       upgradeType
     });
     return response.data;
+  },
+  
+  sell: async (resourceType, quantity) => {
+    const response = await axios.post(`${API_BASE_URL}/game/${getUserId()}/sell`, {
+      resourceType,
+      quantity
+    });
+    return response.data;
   }
 };
 

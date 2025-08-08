@@ -6,20 +6,13 @@ const Dashboard = () => {
   const { gameState, handleClick } = useGame();
   const { inventory = {}, tools = {}, area = {} } = gameState;
 
-  // 缓存上一次的 areaName
-  const lastAreaNamesRef = useRef({});
+const getActiveAreaName = (resourceKey) => {
+  const resourceArea = area[resourceKey];
+  if (!resourceArea) return '无';
+  const activeEntry = Object.entries(resourceArea).find(([key, value]) => value?.active);
+  return activeEntry ? activeEntry[0] : '无';
+};
 
-  const getActiveAreaName = (resourceKey) => {
-    const resourceArea = area[resourceKey];
-    if (!resourceArea) {
-      // 如果当前没有数据，就用上一次的
-      return lastAreaNamesRef.current[resourceKey] || '无';
-    }
-    const activeEntry = Object.entries(resourceArea).find(([key, value]) => value?.active);
-    const areaName = activeEntry ? activeEntry[0] : '无';
-    lastAreaNamesRef.current[resourceKey] = areaName; // 更新缓存
-    return areaName;
-  };
 
   const renderResourceSection = (resourceKey, toolType) => {
     const tool = tools[toolType] || { click_level: 1, collector_level: 0 };

@@ -69,3 +69,45 @@
   text-align: center;
   color: #777;
 }
+
+.inventory-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.inventory-item {
+  background: #eee;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+.sell-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sell-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.sell-item button {
+  background-color: #e57373;
+  color: white;
+  font-weight: bold;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.sell-item button:hover {
+  background-color: #c62828;
+}
