@@ -7,14 +7,13 @@ const GameContext = createContext();
 export const useGame = () => useContext(GameContext);
 
 const GameProvider = ({ children }) => {
+  //initialization
   const [gameState, setGameState] = useState({
-    money: 0,
-    experience: 0,
-    level: 1,
-    clickPower: 1,
-    autoClickers: 0,
-    autoExperience: 0,
+    inventory: {},
+    tools: {},
+    area: {}
   });
+
   //per sec update
   useEffect(() => {
     const interval = setInterval(() => {
@@ -28,48 +27,50 @@ const GameProvider = ({ children }) => {
     try {
       const data = await api.getGameData();
       setGameState(data);
-      setLoading(false);
     } catch (error) {
       console.error('Error loading game data:', error);
-      setLoading(false);
+      
     }
   };
 
   //get click method from server
-  const handleClick = async () => {
+  const handleClick = async (resourceType) => {
     try {
-      const data = await api.click();
+      const data = await api.click(resourceType);
       setGameState(data);
     } catch (error) {
       console.error('Error clicking:', error);
     }
   };
   //calculate upgrade cost
-  const getUpgradeCost = (type) => {
-    switch (type) {
+  const getUpgradeCost = (toolType, upgradeType) => {
+    const tool = gameState.tools[toolType];
+    if (!tool) return 0;
+
+    switch (upgradeType) {
       case 'clickPower':
-        return gameState.clickPower * 10;
-      case 'autoClicker':
-        return (gameState.autoClickers + 1) * 50;
-      case 'autoExperience':
-        return (gameState.autoExperience + 1) * 75;
+        return (tool.click_level + 1) * 10; 
+      case 'autoCollector':
+        return (tool.collector_level + 1) * 50; 
       default:
         return 0;
     }
   };
   
-  const handleUpgrade = async (upgradeType) => {
+  const handleUpgrade = async (toolType, upgradeType) => {
     try {
-      const data = await api.buyUpgrade(upgradeType);
+      const data = await api.buyUpgrade(toolType, upgradeType);
       setGameState(data);
     } catch (error) {
-      alert('Not enough clicks!');
+      alert('Not enough resources!');
     }
   };
 
-  const buyUpgrade = (type) => {
-    handleUpgrade(type);
+  
+  const buyUpgrade = (toolType, upgradeType) => {
+    handleUpgrade(toolType, upgradeType);
   };
+
 
   return (
     <GameContext.Provider value={{

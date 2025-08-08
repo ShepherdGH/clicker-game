@@ -1,73 +1,56 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useGame } from '../context/GameProvider';
 import '../styles/dashboard.css';
 
 const Dashboard = () => {
-  const {
-    gameState,
-    handleClick,
-    buyUpgrade,
-    getUpgradeCost,
-  } = useGame();
+  const { gameState, handleClick } = useGame();
+  const { inventory = {}, tools = {}, area = {} } = gameState;
 
-  const {
-    money,
-    experience,
-    clickPower,
-    autoClickers,
-    autoExperience,
-  } = gameState;
+  // 缓存上一次的 areaName
+  const lastAreaNamesRef = useRef({});
+
+  const getActiveAreaName = (resourceKey) => {
+    const resourceArea = area[resourceKey];
+    if (!resourceArea) {
+      // 如果当前没有数据，就用上一次的
+      return lastAreaNamesRef.current[resourceKey] || '无';
+    }
+    const activeEntry = Object.entries(resourceArea).find(([key, value]) => value?.active);
+    const areaName = activeEntry ? activeEntry[0] : '无';
+    lastAreaNamesRef.current[resourceKey] = areaName; // 更新缓存
+    return areaName;
+  };
+
+  const renderResourceSection = (resourceKey, toolType) => {
+    const tool = tools[toolType] || { click_level: 1, collector_level: 0 };
+    const areaName = getActiveAreaName(resourceKey);
+    const resourcePerSec = tool.collector_level * 1; // 暂时固定公式
+
+    return (
+      <div className="resource-section">
+        <h3>{resourceKey}</h3>
+        <p>当前区域: {areaName}</p>
+        <p>工具等级: {tool.click_level}</p>
+        <p>自动采集等级: {tool.collector_level}</p>
+        <p>资源/秒: {resourcePerSec}</p>
+        <button onClick={() => handleClick(resourceKey)}>手动采集 {resourceKey}</button>
+      </div>
+    );
+  };
 
   return (
     <div className="dashboard-container">
-      <div className="stat-grid">
-        <div className="upgrade-card">
-          <h4>Money</h4>
-          <p>{money.toFixed(0)}</p>
-        </div>
-        <div className="upgrade-card">
-          <h4>Experience</h4>
-          <p>{experience.toFixed(0)}</p>
-        </div>
-        <div className="upgrade-card">
-          <h4>Click Power</h4>
-          <p>{clickPower}</p>
-        </div>
-        <div className="upgrade-card">
-          <h4>Auto Clicker</h4>
-          <p>{autoClickers}</p>
-        </div>
-        <div className="upgrade-card">
-          <h4>Auto Experience</h4>
-          <p>{autoExperience}</p>
-        </div>
+      <div className="inventory-bar">
+        {Object.entries(inventory).map(([item, count]) => (
+          <div key={item} className="inventory-item">
+            {item}: {count}
+          </div>
+        ))}
       </div>
 
-      <button className="main-click-button" onClick={handleClick}>
-        Click to Gain
-      </button>
-
-      <div className="upgrade-grid">
-        <div className="upgrade-card">
-          <h4>Upgrade Click Power</h4>
-          <p>Cost: {getUpgradeCost('clickPower')}</p>
-          <button onClick={() => buyUpgrade('clickPower')}>Upgrade</button>
-        </div>
-
-        <div className="upgrade-card">
-          <h4>Upgrade Auto Clickers</h4>
-          <p>Cost: {getUpgradeCost('autoClicker')}</p>
-          <button onClick={() => buyUpgrade('autoClicker')}>Upgrade</button>
-        </div>
-
-        <div className="upgrade-card">
-          <h4>Upgrade Auto Experience</h4>
-          <p>Cost: {getUpgradeCost('autoClicker')}</p>
-          <button onClick={() => buyUpgrade('autoClicker')}>Upgrade</button>
-        </div>
-
-
-        
+      <div className="modules">
+        {renderResourceSection('wood', 'axe')}
+        {renderResourceSection('stone', 'pickaxe')}
       </div>
     </div>
   );

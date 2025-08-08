@@ -14,13 +14,13 @@ const getItem = (label, key, icon) => ({ key, icon, label });
 const items = [
   getItem('Dashboard', 'dashboard', <AppstoreOutlined />),
   getItem('Skills', 'skills', <BarChartOutlined />),
-  getItem('Profile', 'profile', <UserOutlined />),
+  getItem('Store', 'store', <UserOutlined />),
 ];
 const titleMap = {
   '/':'Dashboard',
   '/dashboard': 'Dashboard',
   '/skills': 'Skills',
-  '/profile': 'Profile',
+  '/store': 'Store',
 };
 
 const MainLayout = ({ children }) => {

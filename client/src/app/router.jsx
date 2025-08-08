@@ -2,7 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import MainLayout from '../components/layout/MainLayout1';
 import Dashboard from '../pages/Dashboard';
 import Skills from '../pages/Skills';
-import Blank from '../pages/Blank';
+import Store from '../pages/Store';
 
 const router = createBrowserRouter([
   {
@@ -13,7 +13,7 @@ const router = createBrowserRouter([
       { path: '', element: <Dashboard /> },
       { path: 'dashboard', element: <Dashboard /> },
       { path: 'skills', element: <Skills /> },
-      { path: 'profile', element: <Blank /> }, 
+      { path: 'store', element: <Store /> }, 
     ],
   },
 ]);
