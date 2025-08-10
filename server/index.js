@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
-const dotenv = require('dotenv'); 
+const dotenv = require('dotenv');
+const { setup } = require('./database.js');
 dotenv.config();
 
 const app = express();
@@ -17,7 +18,7 @@ app.use(cors());
 app.use(express.json());
 
 // Data Storage
-const gameData = {};
+let gameData = {};
 
 // new user initialization
 function initializeUserData(userId) {
@@ -269,6 +270,25 @@ setInterval(() => {
 }, 1000);
 
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+  const db = await setup();
   console.log(`Server running on port ${PORT}`);
+  // Load data from the database on startup
+  const users = await db.all('SELECT * FROM users');
+  users.forEach(user => {
+    gameData[user.id] = JSON.parse(user.gameData);
+  });
+  console.log('Data loaded from database.');
+
+  // Periodically save data to the database
+  setInterval(async () => {
+    for (const userId in gameData) {
+      await db.run(
+        'INSERT OR REPLACE INTO users (id, gameData) VALUES (?, ?)',
+        userId,
+        JSON.stringify(gameData[userId])
+      );
+    }
+    console.log('Data saved to database.');
+  }, 60000); // Every minute
 });
