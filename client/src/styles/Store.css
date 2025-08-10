@@ -1,0 +1,113 @@
+.store-container {
+  padding: 20px;
+}
+
+.store-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.store-section {
+  margin-bottom: 30px;
+}
+
+.store-section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 5px;
+}
+
+.tool-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.tool-card {
+  background: #fff;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  padding: 15px;
+  width: 250px;
+  box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+}
+
+.tool-card h3 {
+  margin-bottom: 10px;
+  text-transform: capitalize;
+}
+
+.upgrade-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.upgrade-buttons button {
+  background-color: #4cafef;
+  color: white;
+  font-weight: bold;
+  border: none;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.upgrade-buttons button:hover {
+  background-color: #3b8ccc;
+}
+
+.buy-list {
+  background: #f9f9f9;
+  border: 2px dashed #aaa;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  color: #777;
+}
+
+.inventory-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.inventory-item {
+  background: #eee;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+.sell-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sell-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.sell-item button {
+  background-color: #e57373;
+  color: white;
+  font-weight: bold;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.sell-item button:hover {
+  background-color: #c62828;
+}

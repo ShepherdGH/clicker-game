@@ -1,0 +1,81 @@
+/* dashboard.css */
+
+/* 整个容器 */
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+}
+
+/* ==================
+   1. Inventory 区域
+   ================== */
+.inventory-bar {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+  background: #ffffff;
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  padding: 15px 20px;
+  font-weight: bold;
+}
+
+.inventory-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.inventory-item::before {
+  content: "🪵"; /* 默认是木头图标，你可以换成动态icon */
+  font-size: 18px;
+}
+
+/* ==================
+   2. 资源模块（砍树/挖矿）
+   ================== */
+.modules {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.resource-section {
+  background: #ffffff;
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.resource-section h3 {
+  font-size: 1.4em;
+  font-weight: bold;
+}
+
+.resource-section p {
+  margin: 0;
+}
+
+/* ==================
+   3. 按钮样式
+   ================== */
+.resource-section button {
+  background-color: #4cafef;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.resource-section button:hover {
+  background-color: #3b91d9;
+}

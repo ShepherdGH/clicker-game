@@ -18,14 +18,25 @@ const api = {
     return response.data;
   },
   
-  click: async () => {
-    const response = await axios.post(`${API_BASE_URL}/game/${getUserId()}/click`);
+  click: async (resourceType) => {
+    const response = await axios.post(`${API_BASE_URL}/game/${getUserId()}/click`, {
+      resourceType 
+    });
     return response.data;
   },
   
-  buyUpgrade: async (upgradeType) => {
+  buyUpgrade: async (toolType, upgradeType) => {
     const response = await axios.post(`${API_BASE_URL}/game/${getUserId()}/upgrade`, {
+      toolType,
       upgradeType
+    });
+    return response.data;
+  },
+  
+  sell: async (resourceType, quantity) => {
+    const response = await axios.post(`${API_BASE_URL}/game/${getUserId()}/sell`, {
+      resourceType,
+      quantity
     });
     return response.data;
   }
