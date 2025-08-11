@@ -3,7 +3,7 @@ const { open } = require('sqlite');
 
 async function setup() {
   const db = await open({
-    filename: './database/database.db',
+    filename: './database.db',
     driver: sqlite3.Database
   });
 

@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 
 # Server Database
-database
+database.db
