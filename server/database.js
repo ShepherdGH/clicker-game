@@ -14,6 +14,22 @@ async function setup() {
     );
   `);
 
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS registered_users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT UNIQUE NOT NULL,
+      password TEXT NOT NULL
+    );
+  `);
+
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS user_game_data (
+      user_id INTEGER PRIMARY KEY,
+      gameData TEXT NOT NULL,
+      FOREIGN KEY (user_id) REFERENCES registered_users (id)
+    );
+  `);
+
   return db;
 }
 
