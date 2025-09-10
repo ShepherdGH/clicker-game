@@ -1,1 +1,1 @@
-# clicker-game
+# Clicker Game
